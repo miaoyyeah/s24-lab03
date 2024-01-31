@@ -14,7 +14,6 @@ import static org.junit.Assert.*;
 
 
 /**
- * TODO: 
  * 1. The {@link LinkedIntQueue} has no bugs. We've provided you with some example test cases.
  * Write your own unit tests to test against IntQueue interface with specification testing method 
  * using mQueue = new LinkedIntQueue();
@@ -32,14 +31,16 @@ public class IntQueueTest {
     private IntQueue mQueue;
     private List<Integer> testList;
 
+    private static final int INITIAL_SIZE = 10;
+
     /**
      * Called before each test.
      */
     @Before
     public void setUp() {
         // comment/uncomment these lines to test each class
-        mQueue = new LinkedIntQueue();
-    //    mQueue = new ArrayIntQueue();
+        // mQueue = new LinkedIntQueue();
+       mQueue = new ArrayIntQueue();
 
         testList = new ArrayList<>(List.of(1, 2, 3));
     }
@@ -52,24 +53,29 @@ public class IntQueueTest {
 
     @Test
     public void testNotEmpty() {
-        // TODO: write your own unit test
-        fail("Test not implemented");
+        assertTrue(mQueue != null);
+        mQueue.clear();
+        mQueue.enqueue(testList.get(0));
+        assertTrue(!mQueue.isEmpty());
     }
 
     @Test
     public void testPeekEmptyQueue() {
-        // TODO: write your own unit test
-        fail("Test not implemented");
+        mQueue.clear();
+        assertNull(mQueue.peek());
     }
 
     @Test
     public void testPeekNoEmptyQueue() {
-        // TODO: write your own unit test
-        fail("Test not implemented");
+        assertTrue(mQueue != null);
+        mQueue.clear();
+        mQueue.enqueue(testList.get(0));
+        assertTrue(mQueue.peek() != null);
     }
 
     @Test
     public void testEnqueue() {
+        mQueue.clear();
         // This is an example unit test
         for (int i = 0; i < testList.size(); i++) {
             mQueue.enqueue(testList.get(i));
@@ -80,8 +86,13 @@ public class IntQueueTest {
 
     @Test
     public void testDequeue() {
-        // TODO: write your own unit test
-        fail("Test not implemented");
+        int size = mQueue.size();
+        for (int i = 0; i < size; i++) {
+            Integer next = mQueue.peek();
+            assertEquals(mQueue.dequeue(), next);
+            assertEquals(i + mQueue.size(), size - 1);
+        }
+        assertNull(mQueue.dequeue());
     }
 
     @Test
@@ -105,5 +116,17 @@ public class IntQueueTest {
         }
     }
 
-
+    @Test
+    public void testEnsureCapacity() {
+        mQueue.clear();
+        for (int i = 0; i < INITIAL_SIZE; i++) {
+            mQueue.enqueue(testList.get(i % testList.size()));
+        }
+        for (int i = 0; i < INITIAL_SIZE / 2; i++) {
+            mQueue.enqueue(mQueue.dequeue());
+        }
+        assertEquals(mQueue.size(), INITIAL_SIZE);
+        mQueue.enqueue(testList.get(0));
+        assertEquals(mQueue.size(), INITIAL_SIZE + 1);
+    }
 }
